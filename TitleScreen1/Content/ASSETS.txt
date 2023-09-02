@@ -1,0 +1,4 @@
+Content/fly_1.png - created by Jasper Nisly for this game, released under public domain
+
+Content/Bangers/Bangers-Regular.ttf - Bangers font created by Vernon Adams, released on Google Fonts (https://fonts.google.com/specimen/Bangers) under the Open Font License
+
