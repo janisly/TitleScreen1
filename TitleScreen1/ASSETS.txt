@@ -1,0 +1,8 @@
+﻿Content/victoryTrill.wav - created by Jasper Nisly for this game with BXFR, released under public domain
+
+Content/DeathBit.wav - created by Jasper Nisly for this game with BXFR, released under public domain
+
+Content/DeeYan-Key-TheGame.mp3 - created by Dee Yan-Key (https://freemusicarchive.org/music/Dee_Yan-Key/facts_of_life/06--Dee_Yan-Key-The_Game) released under CC-By-NC-SA license
+
+Content/John Bartmann - ominous-night-master.mp3 - created by John Bartman
+(https://freemusicarchive.org/music/John_Bartmann/100-ambient-atmospheric-soundtracks-straylight-drones-collection/ominous-night-master/) released under CC0 1.0 Universal License

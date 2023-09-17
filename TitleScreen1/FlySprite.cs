@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using TitleScreen1.Collisions;
 
 namespace TitleScreen1
 {
     public enum Direction
     {
-        Up = 0,
-        Right = 1,
-        Down = 2,
-        Left = 3,
+        Right = 0,
+        Down = 1,
+        Left = 2,
+        Up = 3,
     }
 
     /// <summary>
     /// A class representing a fly
     /// </summary>
-    internal class FlySprite
+    public class FlySprite
     {
         private Texture2D texture;
 
@@ -30,12 +31,33 @@ namespace TitleScreen1
 
         private short animationFrame = 1;
 
+        private bool flap = false;
+
+        private BoundingCircle bounds;
+
+        public bool Caught { get; set; } = false;
+
 
         //The direction of the fly
         public Direction Direction;
 
         //The position of the fly
         public Vector2 Position;
+
+        /// <summary>
+        /// The bounding volume of the sprite
+        /// </summary>
+        public BoundingCircle Bounds => bounds;
+
+        /// <summary>
+        /// Creates a new fly sprite
+        /// </summary>
+        /// <param name="position">The position of the sprite in the game</param>
+        public FlySprite(Vector2 position)
+        {
+            this.Position = position;
+            this.bounds = new BoundingCircle(position + new Vector2(18, 18), 18);
+        }
 
         /// <summary>
         /// Loads the fly sprite texture
@@ -54,8 +76,16 @@ namespace TitleScreen1
         {
             //Update the direction timer
             directionTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
 
-            //Switch directions every two seconds
+            //Switch animation frame every second
+            if (animationTimer > 0.5)
+            {
+                flap = !flap;
+                animationTimer -= 0.5;
+            }
+
+            //Switch directions every half second
             if (directionTimer > 2.0)
             {
                 switch (Direction)
@@ -80,18 +110,19 @@ namespace TitleScreen1
             switch (Direction)
             {
                 case Direction.Up:
-                    Position += new Vector2(0, -1) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, -1) * 80 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Down:
-                    Position += new Vector2(0, 1) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, 1) * 80 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Right:
-                    Position += new Vector2(-1, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(1, 0) * 80 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Left:
-                    Position += new Vector2(1, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(-1, 0) * 80 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
+            bounds = new BoundingCircle(Position + new Vector2(18, 18), 18);
         }
 
         /// <summary>
@@ -101,6 +132,7 @@ namespace TitleScreen1
         /// <param name="spriteBatch">The SpriteBatch to draw with</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (Caught) return;
             int X = 0;
             int Y = 0;
             //Draws the sprite
@@ -111,20 +143,22 @@ namespace TitleScreen1
                     Y = 0;
                     break;
                 case Direction.Down:
-                    X = 9;
-                    Y = 9;
+                    X = 36;
+                    Y = 36;
                     break;
                 case Direction.Right:
-                    X = 9;
+                    X = 36;
                     Y = 0;
                     break;
                 case Direction.Left:
                     X = 0;
-                    Y = 9;
+                    Y = 36;
                     break;
             }
-            var source = new Rectangle(X, Y, 9, 9);
-            spriteBatch.Draw(texture, Position, source, Color.White);
+            int x = 0;
+            if (!flap) x = 72;
+            var source = new Rectangle(X + x, Y, 36, 36);
+            spriteBatch.Draw(texture, Position, source, Color.White, 0, new Vector2(0,0), 1, SpriteEffects.None, 0);
         }
     }
 }
