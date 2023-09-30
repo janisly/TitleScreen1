@@ -2,6 +2,8 @@
 
 Content/DeathBit.wav - created by Jasper Nisly for this game with BXFR, released under public domain
 
+Content/background.png - created by Jasper Nisly for this game with Microsoft Paint, released under public domain
+
 Content/DeeYan-Key-TheGame.mp3 - created by Dee Yan-Key (https://freemusicarchive.org/music/Dee_Yan-Key/facts_of_life/06--Dee_Yan-Key-The_Game) released under CC-By-NC-SA license
 
 Content/John Bartmann - ominous-night-master.mp3 - created by John Bartman
