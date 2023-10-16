@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,5 +20,10 @@ namespace TitleScreen1
         /// The game height
         /// </summary>
         public static int GAME_HEIGHT { get; set; }
+
+        /// <summary>
+        /// The game
+        /// </summary>
+        public static Game PARENT { get; set; }
     }
 }

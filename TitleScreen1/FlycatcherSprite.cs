@@ -6,13 +6,14 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TitleScreen1.Collisions;
+using TitleScreen1.Particles;
 
 namespace TitleScreen1
 {
     /// <summary>
     /// A class representing a flycatcher creature
     /// </summary>
-    public class FlycatcherSprite
+    public class FlycatcherSprite: IParticleEmitter
     {
         private GamePadState gamePadState;
 
@@ -32,6 +33,13 @@ namespace TitleScreen1
 
         private BoundingRectangle bounds = 
             new BoundingRectangle(new Vector2(((Constants.GAME_WIDTH / 2) - 8), ((Constants.GAME_HEIGHT / 2)) - 9), 16, 18);
+
+        private Color spriteColor;
+
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+
+        private Vector2 oldPosition = new Vector2(0, 0);
 
         /// <summary>
         /// The bounding volume of the sprite
@@ -96,6 +104,10 @@ namespace TitleScreen1
             }
             bounds.X = position.X - 8;
             bounds.Y = position.Y - 9;
+
+            Position = position;// new Vector2(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT / 2);
+            Velocity = Position - oldPosition;
+            oldPosition = position;
         }
 
         /// <summary>
@@ -103,12 +115,13 @@ namespace TitleScreen1
         /// </summary>
         /// <param name="gameTime">The game time</param>
         /// <param name="spriteBatch">The spritebatch to render with</param>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color recolor)
         {
+            Color = recolor;
             SpriteEffects spriteEffects = (flipped) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             int x = (moving) ? 66 : 0;
             var source = new Rectangle(0 + x, 0, 66, 72);
-            spriteBatch.Draw(texture, position, source, Color.White, rotation, new Vector2(33, 36), 1, spriteEffects, 0);
+            spriteBatch.Draw(texture, position, source, Color, rotation, new Vector2(33, 36), 1, spriteEffects, 0);
         }
     }
 }

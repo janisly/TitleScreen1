@@ -6,6 +6,8 @@ namespace TitleScreen1.Screens
     // The main menu screen is the first thing displayed when the game starts up.
     public class MainMenuScreen : MenuScreen
     {
+        Game _parent;
+
         public MainMenuScreen() : base("Main Menu")
         {
             var playGameMenuEntry = new MenuEntry("Play Game");

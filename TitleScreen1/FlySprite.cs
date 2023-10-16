@@ -34,6 +34,11 @@ namespace TitleScreen1
         private bool flap = false;
 
         private BoundingCircle bounds;
+        
+        /// <summary>
+        /// The current rotation of the fly. Default 0.
+        /// </summary>
+        public float Rotation;
 
         public bool Caught { get; set; } = false;
 
@@ -130,12 +135,13 @@ namespace TitleScreen1
         /// </summary>
         /// <param name="gameTime">The game time</param>
         /// <param name="spriteBatch">The SpriteBatch to draw with</param>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, float flyScareRotation)
         {
             if (Caught) return;
             int X = 0;
             int Y = 0;
             //Draws the sprite
+            Rotation = flyScareRotation;
             switch (Direction)
             {
                 case Direction.Up:
@@ -158,7 +164,7 @@ namespace TitleScreen1
             int x = 0;
             if (!flap) x = 72;
             var source = new Rectangle(X + x, Y, 36, 36);
-            spriteBatch.Draw(texture, Position, source, Color.White, 0, new Vector2(0,0), 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, Position, source, Color.White, Rotation, new Vector2(0,0), 1, SpriteEffects.None, 0);
         }
     }
 }

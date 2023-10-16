@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TitleScreen1.Particles;
 using TitleScreen1.StateManagement;
 
 namespace TitleScreen1.Screens
@@ -25,6 +26,7 @@ namespace TitleScreen1.Screens
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
+        public bool _shaking { get; set; } = false;
 
         private Texture2D flyTexture;
         private FlySprite[] flies;
@@ -35,6 +37,8 @@ namespace TitleScreen1.Screens
         private Song backgroundMusic;
         private SoundEffect victoryTrill;
         private SoundEffect DeathBit;
+        private float _shakeTime = 0;
+        private PixieParticleSystem pixie;
 
         private Texture2D ball;
 
@@ -75,6 +79,9 @@ namespace TitleScreen1.Screens
             backgroundMusic = _content.Load<Song>("John Bartmann - ominous-night-master");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
+
+            pixie = new PixieParticleSystem(Constants.PARENT, flycatcher);
+            Constants.PARENT.Components.Add(pixie);
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -137,6 +144,7 @@ namespace TitleScreen1.Screens
                         flycatcher.Color = Color.LimeGreen;
                         fly.Caught = true;
                         caught++;
+                        _shaking = true;
                     }
                 }
                 if (caught == 4)
@@ -201,16 +209,35 @@ namespace TitleScreen1.Screens
 
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
+            // This game has a blue background initially. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             var spriteBatch = ScreenManager.SpriteBatch;
+            float flyScareRotation = 0;
+            Color flyCatcherExultation = Color.White;
+            Color bloodColor = Color.Black;
 
-            spriteBatch.Begin();
+            Matrix shakeTransform = Matrix.Identity;
+            if (_shaking)
+            {
+                _shakeTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                shakeTransform = Matrix.CreateTranslation(6 * MathF.Sin(_shakeTime), 6 * MathF.Cos(_shakeTime), 0);
+                flyScareRotation = MathF.Sin(_shakeTime);
+                bloodColor = Color.OrangeRed;
+                if (_shakeTime > 400) _shaking = false;
+            }
+            else 
+            { 
+                _shakeTime = 0;
+                flyScareRotation = 0;
+                bloodColor = Color.Black;
+            }
+
+            spriteBatch.Begin(transformMatrix: shakeTransform);
 
             foreach (var fly in flies)
             {
-                fly.Draw(gameTime, spriteBatch);
+                fly.Draw(gameTime, spriteBatch, flyScareRotation);
                 /* //Fly Hitbox Helper
                 var rect = new Rectangle((int)(fly.Bounds.Center.X - fly.Bounds.Radius),
                     (int)(fly.Bounds.Center.Y - fly.Bounds.Radius),
@@ -239,7 +266,8 @@ namespace TitleScreen1.Screens
             }
             if (stage == 1)
             {
-                flycatcher.Draw(gameTime, spriteBatch);
+                flycatcher.Draw(gameTime, spriteBatch, flyCatcherExultation);
+                pixie.Draw(gameTime, spriteBatch, bloodColor);
             }
             if (stage >= 2)
             {
@@ -252,7 +280,6 @@ namespace TitleScreen1.Screens
                     Color.Gold, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
                 stage++;
             }
-
 
             spriteBatch.End();
 

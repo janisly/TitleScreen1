@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using TitleScreen1.Screens;
 using TitleScreen1.StateManagement;
+using System;
+using TitleScreen1.Particles;
 
 namespace TitleScreen1
 {
@@ -37,6 +39,9 @@ namespace TitleScreen1
             Components.Add(_screenManager);
 
             AddInitialScreens();
+
+            //PixieParticleSystem pixie = new PixieParticleSystem(this, FlycatcherSprite);
+            //Components.Add(pixie);
         }
 
         private void AddInitialScreens()
@@ -53,7 +58,7 @@ namespace TitleScreen1
             // TODO: Add your initialization logic here
             Constants.GAME_WIDTH = GraphicsDevice.Viewport.Width;
             Constants.GAME_HEIGHT = GraphicsDevice.Viewport.Height;
-            
+            Constants.PARENT = this;
 
             base.Initialize();
         }
@@ -81,7 +86,6 @@ namespace TitleScreen1
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LimeGreen);
-
             // TODO: Add your drawing code here
             base.Draw(gameTime);
         }
