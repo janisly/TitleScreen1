@@ -39,6 +39,8 @@ namespace TitleScreen1.Screens
         private SoundEffect DeathBit;
         private float _shakeTime = 0;
         private PixieParticleSystem pixie;
+        // The cube to draw 
+        Cube cube;
 
         private Texture2D ball;
 
@@ -79,6 +81,9 @@ namespace TitleScreen1.Screens
             backgroundMusic = _content.Load<Song>("John Bartmann - ominous-night-master");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
+
+            // Create the cube
+            cube = new Cube(Constants.PARENT);
 
             pixie = new PixieParticleSystem(Constants.PARENT, flycatcher);
             Constants.PARENT.Components.Add(pixie);
@@ -124,6 +129,8 @@ namespace TitleScreen1.Screens
 
             if (IsActive)
             {
+                // update the cube 
+                cube.Update(gameTime);
 
                 //Advances Game Stage (A or Space)
                 if ((GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space) ||
@@ -211,6 +218,9 @@ namespace TitleScreen1.Screens
         {
             // This game has a blue background initially. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+
+            // draw the cube
+            cube.Draw();
 
             var spriteBatch = ScreenManager.SpriteBatch;
             float flyScareRotation = 0;
