@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Win32;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -27,17 +28,20 @@ namespace TitleScreen1.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
         public bool _shaking { get; set; } = false;
+        public bool _celebrating { get; set; } = false;
 
         private Texture2D flyTexture;
         private FlySprite[] flies;
         private FlycatcherSprite flycatcher;
         private SpriteFont bangers;
         private int stage = 0;
+        private int level = 0;
         private int caught = 0;
         private Song backgroundMusic;
         private SoundEffect victoryTrill;
         private SoundEffect DeathBit;
         private float _shakeTime = 0;
+        private float _celebrationTime = 0;
         private PixieParticleSystem pixie;
         // The cube to draw 
         Cube cube;
@@ -56,24 +60,42 @@ namespace TitleScreen1.Screens
                 new[] { Keys.Back, Keys.Escape }, true);
         }
 
+        public void LoadLevel(int level)
+        {
+            
+            if (level == 0)
+            {
+                flycatcher = new FlycatcherSprite();
+                flies = new FlySprite[]
+                {
+                new FlySprite( new Vector2(Constants.GAME_WIDTH / 16, Constants.GAME_HEIGHT / 16)) { Direction = Direction.Right },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16)*15, (Constants.GAME_HEIGHT / 16))) { Direction = Direction.Down },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16)*15, (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Left },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16), (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Up },
+                };
+            }
+            if (level == 1)
+            {
+                flycatcher.ResetPosition(new Vector2(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT / 2));
+                flies = new FlySprite[]
+                {
+                new FlySprite( new Vector2(Constants.GAME_WIDTH / 8, Constants.GAME_HEIGHT / 16)) { Direction = Direction.Right },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 16))) { Direction = Direction.Down },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Left },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8), (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Up },
+                };
+            }
+            foreach (var fly in flies) fly.LoadContent(_content);
+            flycatcher.LoadContent(_content);
+        }
+
         // Load graphics content for the game
         public override void Activate()
         {
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            flycatcher = new FlycatcherSprite();
-            flies = new FlySprite[]
-            {
-                new FlySprite( new Vector2(Constants.GAME_WIDTH / 16, Constants.GAME_HEIGHT / 16)) { Direction = Direction.Right },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16)*15, (Constants.GAME_HEIGHT / 16))) { Direction = Direction.Down },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16)*15, (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Left },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 16), (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Up },
-            };
-
-
-            foreach (var fly in flies) fly.LoadContent(_content);
-            flycatcher.LoadContent(_content);
+            LoadLevel(0);
             bangers = _content.Load<SpriteFont>("bangers");
             ball = _content.Load<Texture2D>("ball");
             victoryTrill = _content.Load<SoundEffect>("victoryTrill");
@@ -116,10 +138,11 @@ namespace TitleScreen1.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+            //Time at which winning occurs
+            float timeWon = 0;
 
             //Exits game (Back or ESC)
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                ExitScreen();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))    ExitScreen();
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
@@ -132,11 +155,17 @@ namespace TitleScreen1.Screens
                 // update the cube 
                 cube.Update(gameTime);
 
+
                 //Advances Game Stage (A or Space)
                 if ((GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space) ||
                     Keyboard.GetState().IsKeyDown(Keys.A)) && stage == 0)
+                {
                     stage = 1;
-
+                    if (level == 1)
+                    {
+                        LoadLevel(level);
+                    }
+                }
                 // TODO: Add your update logic here
                 foreach (var fly in flies) fly.Update(gameTime);
                 if (stage == 1) flycatcher.Update(gameTime);
@@ -156,7 +185,25 @@ namespace TitleScreen1.Screens
                 }
                 if (caught == 4)
                 {
-                    stage = 2;
+                    if (level >= 0)
+                    {
+                        if (stage == 1)
+                        {
+                            stage = 2;
+                        }
+                        if (_celebrating)
+                        {
+                            _celebrationTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                            if (_celebrationTime >= 2000)
+                            {
+                                _celebrationTime = 0;
+                                stage = 0;
+                                level = 1;
+                                caught = 0;
+                                _celebrating = false;
+                            }
+                        }
+                    }
                 }
 
             }
@@ -220,7 +267,7 @@ namespace TitleScreen1.Screens
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             // draw the cube
-            cube.Draw();
+            //cube.Draw();
 
             var spriteBatch = ScreenManager.SpriteBatch;
             float flyScareRotation = 0;
@@ -281,14 +328,14 @@ namespace TitleScreen1.Screens
             }
             if (stage >= 2)
             {
-                if (caught == 4)
+                if (stage == 2)
                 {
                     victoryTrill.Play();
-                    caught++;
+                    _celebrating = true;
                 }
                 spriteBatch.DrawString(bangers, "PREY SLAUGHTERED", new Vector2((Constants.GAME_WIDTH / 16) * 5, (Constants.GAME_HEIGHT / 16) * 7),
                     Color.Gold, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
-                stage++;
+                stage = 3;
             }
 
             spriteBatch.End();

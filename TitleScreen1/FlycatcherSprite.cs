@@ -60,6 +60,12 @@ namespace TitleScreen1
             texture = content.Load<Texture2D>("flycatcher");
         }
 
+        public void ResetPosition(Vector2 position)
+        {
+            this.position = position;
+            this.oldPosition = position;
+        }
+
         /// <summary>
         /// Updates the sprite's position based on user input
         /// </summary>
