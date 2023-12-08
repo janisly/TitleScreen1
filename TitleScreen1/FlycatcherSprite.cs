@@ -38,6 +38,7 @@ namespace TitleScreen1
 
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
+        public float SpeedMod { get; set; } = 0;
 
         private Vector2 oldPosition = new Vector2(0, 0);
 
@@ -86,25 +87,25 @@ namespace TitleScreen1
             // Apply keyboard movement
             if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
             {
-                position += new Vector2(0, -1 * speed);
+                position += new Vector2(0, -1 * (speed + SpeedMod));
                 moving = true;
                 if (flipped) { rotation = 0.10f; } else { rotation = -0.20f; }
             }
             if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
             {
-                position += new Vector2(0, 1 * speed);
+                position += new Vector2(0, 1 * (speed + SpeedMod));
                 moving = true;
                 if (flipped) { rotation = -0.10f; } else { rotation = 0.20f; }
             }
             if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
             {
-                position += new Vector2(-1 * speed, 0);
+                position += new Vector2(-1 * (speed + SpeedMod), 0);
                 flipped = true;
                 moving = true;
             }
             if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
             {
-                position += new Vector2(1 * speed, 0);
+                position += new Vector2(1 * (speed + SpeedMod), 0);
                 flipped = false;
                 moving = true;
             }

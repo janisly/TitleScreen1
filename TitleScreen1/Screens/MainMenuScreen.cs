@@ -8,7 +8,7 @@ namespace TitleScreen1.Screens
     {
         Game _parent;
 
-        public MainMenuScreen() : base("Main Menu")
+        public MainMenuScreen() : base("Flycatcher Eternal")
         {
             var playGameMenuEntry = new MenuEntry("Play Game");
             var optionsMenuEntry = new MenuEntry("Options");

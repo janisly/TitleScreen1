@@ -42,7 +42,13 @@ namespace TitleScreen1.Screens
         private SoundEffect DeathBit;
         private float _shakeTime = 0;
         private float _celebrationTime = 0;
+        private float _recordTime = 0;
+        private float _oldRecord = 0;
+        private float _speedMod = 0;
+        private float _highSpeed;
         private PixieParticleSystem pixie;
+        private Color[] levelColor = { Color.CornflowerBlue, Color.Crimson, Color.Cyan, Color.SeaGreen, Color.Gainsboro,
+        Color.Yellow, Color.Orange, Color.DarkBlue, Color.Fuchsia, Color.Gold};
         // The cube to draw 
         Cube cube;
 
@@ -74,15 +80,16 @@ namespace TitleScreen1.Screens
                 new FlySprite( new Vector2((Constants.GAME_WIDTH / 16), (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Up },
                 };
             }
-            if (level == 1)
+            if (level >= 1)
             {
                 flycatcher.ResetPosition(new Vector2(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT / 2));
+                flycatcher.SpeedMod = (float)(_speedMod * 0.4);
                 flies = new FlySprite[]
                 {
-                new FlySprite( new Vector2(Constants.GAME_WIDTH / 8, Constants.GAME_HEIGHT / 16)) { Direction = Direction.Right },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 16))) { Direction = Direction.Down },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Left },
-                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8), (Constants.GAME_HEIGHT / 16)*14)) { Direction = Direction.Up },
+                new FlySprite( new Vector2(Constants.GAME_WIDTH / 8, Constants.GAME_HEIGHT / 8)) { Direction = Direction.Right },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 8))) { Direction = Direction.Down },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8)*7, (Constants.GAME_HEIGHT / 8)*7)) { Direction = Direction.Left },
+                new FlySprite( new Vector2((Constants.GAME_WIDTH / 8), (Constants.GAME_HEIGHT / 8)*7)) { Direction = Direction.Up },
                 };
             }
             foreach (var fly in flies) fly.LoadContent(_content);
@@ -140,7 +147,7 @@ namespace TitleScreen1.Screens
 
             //Time at which winning occurs
             float timeWon = 0;
-
+            
             //Exits game (Back or ESC)
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))    ExitScreen();
 
@@ -155,13 +162,16 @@ namespace TitleScreen1.Screens
                 // update the cube 
                 cube.Update(gameTime);
 
+                //Updates the ongoing timer
+                if (stage < 2 && stage > 0) { _recordTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds; }
+
 
                 //Advances Game Stage (A or Space)
                 if ((GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space) ||
                     Keyboard.GetState().IsKeyDown(Keys.A)) && stage == 0)
                 {
                     stage = 1;
-                    if (level == 1)
+                    if (level >= 1)
                     {
                         LoadLevel(level);
                     }
@@ -185,25 +195,35 @@ namespace TitleScreen1.Screens
                 }
                 if (caught == 4)
                 {
-                    if (level >= 0)
+                    if (stage == 1)
                     {
-                        if (stage == 1)
+                        stage = 2;
+                        //Takes the difference in milliseconds between rounds, converts to seconds
+                        float recordDifference = (_recordTime - _oldRecord) / 1000;
+                        //Calculates Time under ten seconds achieved
+                        float timeSaved = 10 - recordDifference;
+                        //Uses a square root to return a speed boost between 0 and 10 with diminishing returns
+                        if (recordDifference < 10)
                         {
-                            stage = 2;
+                            _speedMod = (float)Math.Pow((timeSaved/10), 0.7)*10;
                         }
-                        if (_celebrating)
+                        else { _speedMod = 0; }
+                        _highSpeed = Math.Max(_highSpeed, _speedMod);
+                        _oldRecord = _recordTime;
+                    }
+                    if (_celebrating)
+                    {
+                        _celebrationTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        if (_celebrationTime >= 2000)
                         {
-                            _celebrationTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                            if (_celebrationTime >= 2000)
-                            {
-                                _celebrationTime = 0;
-                                stage = 0;
-                                level = 1;
-                                caught = 0;
-                                _celebrating = false;
-                            }
+                            _celebrationTime = 0;
+                            stage = 0;
+                            level += 1;
+                            caught = 0;
+                            _celebrating = false;
                         }
                     }
+                    
                 }
 
             }
@@ -264,7 +284,7 @@ namespace TitleScreen1.Screens
         public override void Draw(GameTime gameTime)
         {
             // This game has a blue background initially. Why? Because!
-            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, levelColor[level % 10], 0, 0);
 
             // draw the cube
             //cube.Draw();
@@ -314,12 +334,30 @@ namespace TitleScreen1.Screens
                 Color.Black, 0, new Vector2(0, 0), 0.7f, SpriteEffects.None, 0);
             spriteBatch.DrawString(bangers, "(WASD to move)", new Vector2(2, 20),
                 Color.Black, 0, new Vector2(0, 0), 0.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "Record Time: " + Math.Round((_recordTime/1000), 3), new Vector2(2, 35),
+                levelColor[(level + 1) % 10], 0, new Vector2(0, 0), 0.85f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "Level: " + (level + 1), new Vector2(2, 56),
+                levelColor[(level + 1) % 10], 0, new Vector2(0, 0), 0.6f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "Speed: " + Math.Round((1 + _speedMod), 1), new Vector2(2, 72),
+                levelColor[(level + 1) % 10], 0, new Vector2(0, 0), 0.6f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "Highest Speed: " + Math.Round((1 + _highSpeed), 1), new Vector2(2, 98),
+                levelColor[(level + 2) % 10], 0, new Vector2(0, 0), 0.6f, SpriteEffects.None, 0);
             if (stage == 0)
             {
-                spriteBatch.DrawString(bangers, "FLYCATCHER", new Vector2((Constants.GAME_WIDTH / 16) * 6, (Constants.GAME_HEIGHT / 16) * 7),
-                    Color.Gold, 0, new Vector2(0, 0), 1.2f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(bangers, "Press A or Space to start", new Vector2((Constants.GAME_WIDTH / 32) * 12, Constants.GAME_HEIGHT / 2),
-                    Color.Red, 0, new Vector2(0, 0), 0.8f, SpriteEffects.None, 0);
+                if (level == 0)
+                {
+                    spriteBatch.DrawString(bangers, "FLYCATCHER", new Vector2((Constants.GAME_WIDTH / 16) * 6, (Constants.GAME_HEIGHT / 16) * 7),
+                        Color.Gold, 0, new Vector2(0, 0), 1.2f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(bangers, "Press A or Space to start", new Vector2((Constants.GAME_WIDTH / 32) * 11, Constants.GAME_HEIGHT / 2),
+                        Color.Red, 0, new Vector2(0, 0), 0.8f, SpriteEffects.None, 0);
+                }
+                else
+                {
+                    spriteBatch.DrawString(bangers, "Press A or Space to start", new Vector2((Constants.GAME_WIDTH / 16) * 5, (Constants.GAME_HEIGHT / 16) * 7),
+                        levelColor[(level + 1) % 10], 0, new Vector2(0, 0), 0.9f, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(bangers, "Speed Boost For Next Level: " + Math.Round(_speedMod, 1), new Vector2((Constants.GAME_WIDTH / 16) * 6, (Constants.GAME_HEIGHT / 16) * 8),
+                        levelColor[(level + 1) % 10], 0, new Vector2(0, 0), 0.7f, SpriteEffects.None, 0);
+                }
             }
             if (stage == 1)
             {
@@ -333,8 +371,16 @@ namespace TitleScreen1.Screens
                     victoryTrill.Play();
                     _celebrating = true;
                 }
-                spriteBatch.DrawString(bangers, "PREY SLAUGHTERED", new Vector2((Constants.GAME_WIDTH / 16) * 5, (Constants.GAME_HEIGHT / 16) * 7),
-                    Color.Gold, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
+                if(level != 9)
+                {
+                    spriteBatch.DrawString(bangers, "PREY SLAUGHTERED", new Vector2((Constants.GAME_WIDTH / 16) * 5, (Constants.GAME_HEIGHT / 16) * 7),
+                        Color.Gold, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
+                }
+                else
+                {
+                    spriteBatch.DrawString(bangers, "PREY SLAUGHTERED", new Vector2((Constants.GAME_WIDTH / 16) * 5, (Constants.GAME_HEIGHT / 16) * 7),
+                        Color.LimeGreen, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
+                }
                 stage = 3;
             }
 

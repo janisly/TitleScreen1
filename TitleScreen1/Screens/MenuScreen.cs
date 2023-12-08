@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TitleScreen1.StateManagement;
@@ -143,6 +144,7 @@ namespace TitleScreen1.Screens
             var graphics = ScreenManager.GraphicsDevice;
             var spriteBatch = ScreenManager.SpriteBatch;
             var font = ScreenManager.Font;
+            var titleFont = ScreenManager.TitleFont;
 
             spriteBatch.Begin();
 
@@ -161,12 +163,12 @@ namespace TitleScreen1.Screens
             // Draw the menu title centered on the screen
             var titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
             var titleOrigin = font.MeasureString(_menuTitle) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            const float titleScale = 1.25f;
+            var titleColor = Color.Black;
+            const float titleScale = 1.5f;
+            
 
             titlePosition.Y -= transitionOffset * 100;
-
-            spriteBatch.DrawString(font, _menuTitle, titlePosition, titleColor,
+            spriteBatch.DrawString(titleFont, _menuTitle, titlePosition, titleColor,
                 0, titleOrigin, titleScale, SpriteEffects.None, 0);
 
             spriteBatch.End();

@@ -93,21 +93,7 @@ namespace TitleScreen1
             //Switch directions every half second
             if (directionTimer > 2.0)
             {
-                switch (Direction)
-                {
-                    case Direction.Up:
-                        Direction = Direction.Right;
-                        break;
-                    case Direction.Down:
-                        Direction = Direction.Left;
-                        break;
-                    case Direction.Right:
-                        Direction = Direction.Down;
-                        break;
-                    case Direction.Left:
-                        Direction = Direction.Up;
-                        break;
-                }
+                Circle(1);
                 directionTimer -= 2.0;
             }
 
@@ -128,6 +114,31 @@ namespace TitleScreen1
                     break;
             }
             bounds = new BoundingCircle(Position + new Vector2(18, 18), 18);
+        }
+
+        public void Circle(int type)
+        {
+            switch (type)
+            {
+                case 1:
+                    switch (Direction)
+                    {
+                        case Direction.Up:
+                            Direction = Direction.Right;
+                            break;
+                        case Direction.Down:
+                            Direction = Direction.Left;
+                            break;
+                        case Direction.Right:
+                            Direction = Direction.Down;
+                            break;
+                        case Direction.Left:
+                            Direction = Direction.Up;
+                            break;
+                    }
+                    break;
+            }
+            
         }
 
         /// <summary>
