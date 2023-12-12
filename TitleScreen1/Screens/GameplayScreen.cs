@@ -286,9 +286,6 @@ namespace TitleScreen1.Screens
             // This game has a blue background initially. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, levelColor[level % 10], 0, 0);
 
-            // draw the cube
-            //cube.Draw();
-
             var spriteBatch = ScreenManager.SpriteBatch;
             float flyScareRotation = 0;
             Color flyCatcherExultation = Color.White;
@@ -382,6 +379,12 @@ namespace TitleScreen1.Screens
                         Color.LimeGreen, 0, new Vector2(0, 0), 1.7f, SpriteEffects.None, 0);
                 }
                 stage = 3;
+            }
+
+            if(level == 9)
+            {
+                // draw the cube
+                cube.Draw();
             }
 
             spriteBatch.End();
