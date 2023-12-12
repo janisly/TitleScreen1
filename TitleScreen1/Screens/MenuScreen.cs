@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TitleScreen1.StateManagement;
+using Flycatcher.StateManagement;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     // Base class for screens that contain a menu of options. The user can
     // move up and down to select an entry, or cancel to back out of the screen.

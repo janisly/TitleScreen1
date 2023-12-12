@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TitleScreen1
+namespace Flycatcher
 {
     /// <summary>
     /// A class defining constants for the game

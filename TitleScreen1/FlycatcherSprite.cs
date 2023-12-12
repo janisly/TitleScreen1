@@ -5,10 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using TitleScreen1.Collisions;
-using TitleScreen1.Particles;
+using Flycatcher.Collisions;
+using Flycatcher.Particles;
 
-namespace TitleScreen1
+namespace Flycatcher
 {
     /// <summary>
     /// A class representing a flycatcher creature

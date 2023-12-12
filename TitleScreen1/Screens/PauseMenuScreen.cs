@@ -1,6 +1,6 @@
-﻿using TitleScreen1.StateManagement;
+﻿using Flycatcher.StateManagement;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     // The pause menu comes up over the top of the game,
     // giving the player options to resume or quit.

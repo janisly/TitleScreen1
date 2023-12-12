@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 
-namespace TitleScreen1.StateManagement
+namespace Flycatcher.StateManagement
 {
     /// <summary>
     /// The ScreenManager is a component which manages one or more GameScreen instance.

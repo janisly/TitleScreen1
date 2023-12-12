@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace TitleScreen1.Particles
+namespace Flycatcher.Particles
 {
     /// <summary>
     /// A static class providing helper methods for generating 

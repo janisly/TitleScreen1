@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TitleScreen1
+namespace Flycatcher
 {
     /// <summary>
     /// A class for rendering a cube

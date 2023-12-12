@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TitleScreen1.StateManagement;
+using Flycatcher.StateManagement;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     // Helper class represents a single entry in a MenuScreen. By default this
     // just draws the entry text string, but it can be customized to display menu

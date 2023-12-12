@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace TitleScreen1.StateManagement
+namespace Flycatcher.StateManagement
 {
     /// <summary>
     /// A screen is a single layer of game content that has

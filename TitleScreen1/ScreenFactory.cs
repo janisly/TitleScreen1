@@ -1,7 +1,7 @@
 ﻿using System;
-using TitleScreen1.StateManagement;
+using Flycatcher.StateManagement;
 
-namespace TitleScreen1
+namespace Flycatcher
 {
     // Our game's implementation of IScreenFactory which can handle creating the screens
     public class ScreenFactory : IScreenFactory

@@ -1,17 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TitleScreen1;
+using Flycatcher;
 using SharpDX.MediaFoundation;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
-using TitleScreen1.Screens;
-using TitleScreen1.StateManagement;
+using Flycatcher.Screens;
+using Flycatcher.StateManagement;
 using System;
-using TitleScreen1.Particles;
+using Flycatcher.Particles;
 
-namespace TitleScreen1
+namespace Flycatcher
 {
 
     /// <summary>

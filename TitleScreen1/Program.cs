@@ -1,3 +1,3 @@
 ﻿
-using var game = new TitleScreen1.TitlePage();
+using var game = new Flycatcher.TitlePage();
 game.Run();

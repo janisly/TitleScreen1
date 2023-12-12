@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TitleScreen1.StateManagement
+namespace Flycatcher.StateManagement
 {
     /// <summary>
     /// Enumerations of the possible screen states

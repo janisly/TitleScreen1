@@ -5,10 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
-using TitleScreen1.StateManagement;
+using Flycatcher.StateManagement;
 using Microsoft.Xna.Framework.Input;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     public class CutSceneScreen : GameScreen
     {

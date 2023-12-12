@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using TitleScreen1.StateManagement;
+using Flycatcher.StateManagement;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     // The main menu screen is the first thing displayed when the game starts up.
     public class MainMenuScreen : MenuScreen

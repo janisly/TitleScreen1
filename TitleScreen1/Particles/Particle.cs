@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace TitleScreen1.Particles
+namespace Flycatcher.Particles
 {
     /// <summary>
     /// A class representing a single particle in a particle system 

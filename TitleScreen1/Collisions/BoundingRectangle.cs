@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace TitleScreen1.Collisions
+namespace Flycatcher.Collisions
 {
     public struct BoundingRectangle
     {

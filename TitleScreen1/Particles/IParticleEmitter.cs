@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace TitleScreen1.Particles
+namespace Flycatcher.Particles
 {
     public interface IParticleEmitter
     {

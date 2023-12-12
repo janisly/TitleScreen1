@@ -7,10 +7,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using TitleScreen1.Particles;
-using TitleScreen1.StateManagement;
+using Flycatcher.Particles;
+using Flycatcher.StateManagement;
 
-namespace TitleScreen1.Screens
+namespace Flycatcher.Screens
 {
     // This screen implements the actual game logic. It is just a
     // placeholder to get the idea across: you'll probably want to
@@ -381,7 +381,7 @@ namespace TitleScreen1.Screens
                 stage = 3;
             }
 
-            if(level == 9)
+            if(level == 9 || (level) % 10 == 9)
             {
                 // draw the cube
                 cube.Draw();

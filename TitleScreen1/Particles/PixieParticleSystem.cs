@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TitleScreen1.Particles
+namespace Flycatcher.Particles
 {
     public class PixieParticleSystem : ParticleSystem
     {
